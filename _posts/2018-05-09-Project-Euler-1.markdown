@@ -1,6 +1,6 @@
 ---
 layout: default
-title:  Project Euler 1
+title:  Project Euler - Problem 1
 date:   2018-05-09 16:00:00 -0400
 categories: ProjectEuler
 permalink: "/pe/1"
