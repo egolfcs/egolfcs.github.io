@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>Project Euler 1 | Egolfcs</title>
+<meta name="generator" content="Jekyll v3.8.1" />
+<meta property="og:title" content="Project Euler 1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Project Euler Problem 1" />
+<meta property="og:description" content="Project Euler Problem 1" />
+<link rel="canonical" href="http://localhost:4000/pe/1" />
+<meta property="og:url" content="http://localhost:4000/pe/1" />
+<meta property="og:site_name" content="Egolfcs" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-05-09T16:00:00-04:00" />
+<script type="application/ld+json">
+{"description":"Project Euler Problem 1","@type":"BlogPosting","url":"http://localhost:4000/pe/1","headline":"Project Euler 1","dateModified":"2018-05-09T16:00:00-04:00","datePublished":"2018-05-09T16:00:00-04:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/pe/1"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="/assets/js/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="/assets/css/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <style type="text/css">
+        .logo:hover { COLOR: WHITE; TEXT-DECORATION: none; font-weight: none }
+    </style>
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="">View On GitHub</a></li>
+          
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <a href="/index.html"><h1 class="logo">Egolfcs</h1></a>
+          <p></p>
+          <hr>
+        </div>
+
+        <h1 id="project-euler-problem-1">Project Euler Problem 1</h1>
+
+<blockquote>
+
+  <p>If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.<br /><br />
+Find the sum of all the multiples of 3 or 5 below 1000.</p>
+</blockquote>
+
+<h2 id="naive-approach">Naive Approach</h2>
+
+<p>The naive approach is to iterate over the numbers from 1 to 1000, check if each number is divisible by 3 or 5, and add that number to a running total if it is. That would look something like this:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sol1</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span>
+
+    <span class="k">return</span> <span class="n">s</span></code></pre></figure>
+
+<p>This works, but it isn’t the most efficient solution. In order to come to a solution this way, we must iterate over each number less than 1000. This solution is therefore O(n). This is perhaps the best we can do without using math, but we absolutely can do better.</p>
+
+<h2 id="some-math">Some Math</h2>
+<p>It is know that the sum of every number from 1 to n is equal to <code class="highlighter-rouge">n*(1+n)*0.5.</code> This is not hard to prove. Consider the list:</p>
+
+<p><code class="highlighter-rouge">1,2,3... 499, 501,... 997, 998, 999</code></p>
+
+<p>Take the sum of the pairs of the ends and move inwards such that:</p>
+
+<p><code class="highlighter-rouge">1 + 999 = 2 + 998 = 3 + 997 = ...499+501 = 1000</code></p>
+
+<p>There are 499 pairs of numbers in the list which each sum to 1 + n with n = 999. We can map (n+1)/2, in this case 500, to each number in the pair. That is, if there are 499 pairs that add to 1000, we can “average out” this 1000 by assigning 500 to 998 numbers. Finally, observe that 500 was left by itself. This is the 999th 500. This is not a perfectly rigorous proof for the general formula, but hopefully it gives an intuition if you’ve never seen this before or is a sufficient refresher if you have.</p>
+
+<h2 id="a-faster-approach">A Faster Approach</h2>
+
+<p>Using this formula we can find <code class="highlighter-rouge">3 + 6 + 9... + ~n</code> and <code class="highlighter-rouge">5 + 10 + 15... + ~n</code> with ~n being the closest number to n which is a multiple of 3 or 5. By factoring out 3 and 5 we get</p>
+
+<p><code class="highlighter-rouge">3(1 + 2 + 3... + ~n/3)</code> and <code class="highlighter-rouge">5(1 + 2 + 3... + ~n/5)</code></p>
+
+<p>Conveniently, ~n/k is simply n/k by integer division, so we need not actually find ~n. Therefore, we can find n/k, plug it into our sum equation, and multiply the result by k to find the sum of integers less than n which are divisible by k.</p>
+
+<p>Using this method, we might sum all of the numbers divisible by 3 and then sum all of the numbers divisible by 5. We can then take those two sums and add them together. Notice though that numbers like 15, 30, 45… are divisible by both 3 and 5. Simply adding the two sums together will double count the numbers divisible by 15. This can be remedied by finding a third sum, that being the sum of the numbers divisible by 15. We can then subtract this sum from the double counting sum in order to adjust.</p>
+
+<p>Implementing these ideas might look something like this:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">linsum</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">n</span> <span class="o">/</span> <span class="n">k</span>
+    <span class="k">return</span> <span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">u</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">sol2</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">linsum</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">linsum</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">n</span><span class="p">))</span> <span class="o">-</span> <span class="n">linsum</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="n">n</span><span class="p">))</span></code></pre></figure>
+
+<p>This solution will be O(1) with respect to n as each calculation of <code class="highlighter-rouge">linsum()</code> is constant. There is no need to populate or iterate over a list using this approach.</p>
+
+
+      </section>
+
+    </div>
+
+    
+  </body>
+  <div class="wrapper">
+
+    <section>
+      <div id="title">
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+      </div>
+  </div>
+</html>
